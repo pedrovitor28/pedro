@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a0a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WX Salão">
+<meta name="description" content="Agende seu horário no WX Salão de Beleza — Zona Leste, São Paulo">
+<link rel="manifest" href="manifest.json">
+<title>WX Salão de Beleza</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+,::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --dp:#1a0a2e; --royal:#2d1260; --violet:#4a1e96;
+  --lav:#c9b8f0; --pale:#f3effc;
+  --gold:#d4a84b; --glight:#f0cc7a;
+  --muted:#a094c0; --white:#fdfcff;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--dp);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;padding:18px 56px;display:flex;align-items:center;justify-content:space-between;background:rgba(26,10,46,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,168,75,.15)}
+.nav-logo{font-family:‘Cormorant Garamond’,serif;font-size:24px;color:var(–gold);text-decoration:none}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(–lav);text-decoration:none;transition:color .3s}
+.nav-links a:hover{color:var(–gold)}
+.nav-admin{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(–gold);text-decoration:none;border:1px solid rgba(212,168,75,.35);padding:8px 16px;transition:all .3s}
+.nav-admin:hover{background:var(–gold);color:var(–dp)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url(‘https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1400&q=80’);background-size:cover;background-position:center;filter:brightness(.35)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,10,46,.92) 0%,rgba(74,30,150,.45) 60%,rgba(26,10,46,.3) 100%)}
+.hero-content{position:relative;z-index:2;padding:140px 56px 80px;max-width:700px}
+.eyebrow{font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(–gold);margin-bottom:22px;opacity:0;animation:fadeUp .7s ease forwards .2s}
+.hero-title{font-family:‘Cormorant Garamond’,serif;font-size:clamp(48px,6vw,84px);line-height:1.02;color:var(–white);margin-bottom:26px;opacity:0;animation:fadeUp .7s ease forwards .4s}
+.hero-title em{color:var(–gold);font-style:italic}
+.hero-sub{font-size:16px;line-height:1.8;color:rgba(201,184,240,.85);max-width:480px;margin-bottom:48px;opacity:0;animation:fadeUp .7s ease forwards .6s}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp .7s ease forwards .8s}
+.btn-gold{display:inline-block;background:var(–gold);color:var(–dp);font-family:‘Jost’,sans-serif;font-weight:500;font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:17px 38px;border:none;cursor:pointer;text-decoration:none;transition:all .3s}
+.btn-gold:hover{background:var(–glight);transform:translateY(-3px);box-shadow:0 16px 36px rgba(212,168,75,.35)}
+.btn-outline{display:inline-block;background:transparent;color:rgba(201,184,240,.9);font-family:‘Jost’,sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:17px 38px;border:1px solid rgba(201,184,240,.3);cursor:pointer;text-decoration:none;transition:all .3s}
+.btn-outline:hover{border-color:var(–gold);color:var(–gold)}
+.hero-stats{position:absolute;bottom:0;left:0;right:0;z-index:2;background:rgba(26,10,46,.75);backdrop-filter:blur(12px);border-top:1px solid rgba(212,168,75,.12);display:flex;justify-content:center;gap:0}
+.hstat{flex:1;max-width:200px;text-align:center;padding:24px 20px;border-right:1px solid rgba(212,168,75,.12)}
+.hstat:last-child{border-right:none}
+.hstat-n{font-family:‘Cormorant Garamond’,serif;font-size:32px;color:var(–gold)}
+.hstat-l{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(–muted);margin-top:4px}
+
+/* ── TICKER ── */
+.ticker-wrap{background:linear-gradient(90deg,var(–gold),var(–glight) 50%,var(–gold));padding:14px 0;overflow:hidden}
+.ticker{display:flex;gap:52px;animation:ticker 26s linear infinite;white-space:nowrap}
+.ti{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(–dp);font-weight:500;display:flex;align-items:center;gap:8px}
+
+/* ── SECTIONS ── */
+.sw{padding:100px 56px;max-width:1340px;margin:0 auto}
+.ey{font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(–gold);margin-bottom:14px}
+.st{font-family:‘Cormorant Garamond’,serif;font-size:clamp(32px,4vw,54px);line-height:1.1;color:var(–dp);margin-bottom:16px}
+.ss{font-size:15px;color:#7060a0;max-width:520px;line-height:1.75}
+
+/* ── GALERIA ── */
+.gal-section{background:var(–dp);padding:100px 56px}
+.gal-inner{max-width:1340px;margin:0 auto}
+.gal-inner .st{color:var(–white)}
+.gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:240px 200px;gap:10px;margin-top:52px}
+.gal-item{overflow:hidden;position:relative;cursor:pointer}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease,filter .6s ease;filter:brightness(.85) saturate(.9)}
+.gal-item:hover img{transform:scale(1.08);filter:brightness(1) saturate(1.1)}
+.gal-item::after{content:attr(data-label);position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(26,10,46,.85),transparent);color:var(–white);font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:20px 16px 12px;opacity:0;transition:opacity .4s}
+.gal-item:hover::after{opacity:1}
+.gal-item:first-child{grid-column:1/3;grid-row:1/3}
+.gal-note{text-align:center;margin-top:20px;font-size:13px;color:var(–muted)}
+
+/* ── SERVIÇOS ── */
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:52px}
+.svc-grid-2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.svc{background:var(–pale);padding:32px 26px 28px;position:relative;overflow:hidden;border-bottom:3px solid transparent;transition:all .4s}
+.svc::after{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,var(–royal),var(–dp));opacity:0;transition:opacity .4s;z-index:0}
+.svc:hover{border-bottom-color:var(–gold);transform:translateY(-5px);box-shadow:0 20px 50px rgba(74,30,150,.14)}
+.svc:hover::after{opacity:1}
+.svc:hover .si,.svc:hover .sn,.svc:hover .sd{color:var(–white)}
+.svc:hover .sp{color:var(–glight)}
+.si{font-size:32px;margin-bottom:14px;position:relative;z-index:1;transition:color .4s}
+.sn{font-family:‘Cormorant Garamond’,serif;font-size:20px;color:var(–dp);margin-bottom:8px;position:relative;z-index:1;transition:color .4s}
+.sd{font-size:13px;color:#7060a0;line-height:1.6;margin-bottom:18px;position:relative;z-index:1;transition:color .4s}
+.sp{font-family:‘Cormorant Garamond’,serif;font-size:22px;color:var(–gold);font-weight:600;position:relative;z-index:1;transition:color .4s}
+
+/* ── COMBOS ── */
+.combos-bg{background:var(–dp);padding:100px 56px}
+.combos-inner{max-width:1340px;margin:0 auto}
+.combos-inner .st{color:var(–white)}
+.combos-inner .ss{color:var(–muted)}
+.combos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.combo{border:1px solid rgba(201,184,240,.18);padding:40px 30px;position:relative;transition:all .4s}
+.combo.feat{background:rgba(212,168,75,.06);border-color:var(–gold)}
+.combo:hover{transform:translateY(-5px);border-color:var(–gold);box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.cbadge{position:absolute;top:-13px;left:26px;background:var(–gold);color:var(–dp);font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:5px 13px;font-weight:500}
+.ctitle{font-family:‘Cormorant Garamond’,serif;font-size:23px;color:var(–white);margin-bottom:18px}
+.citems{list-style:none;margin-bottom:26px}
+.citems li{font-size:13px;color:var(–muted);padding:7px 0;border-bottom:1px solid rgba(212,168,75,.1);display:flex;gap:8px}
+.cprice{font-family:‘Cormorant Garamond’,serif;font-size:32px;color:var(–gold);font-weight:600}
+.cold{font-size:14px;color:#605070;text-decoration:line-through;margin-left:8px}
+
+/* ── EQUIPE ── */
+.team-bg{background:var(–pale);padding:100px 56px}
+.team-inner{max-width:1340px;margin:0 auto}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.tcard{background:var(–white);border:1px solid rgba(201,184,240,.3);overflow:hidden;transition:all .4s;position:relative}
+.tcard::after{content:’’;position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(–violet),var(–gold));transform:scaleX(0);transition:transform .4s}
+.tcard:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(74,30,150,.1)}
+.tcard:hover::after{transform:scaleX(1)}
+.tphoto{width:100%;height:220px;object-fit:cover;object-position:top;filter:saturate(.85)}
+.tinfo{padding:28px 24px}
+.tname{font-family:‘Cormorant Garamond’,serif;font-size:22px;color:var(–dp);margin-bottom:4px}
+.trole{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(–gold);margin-bottom:12px}
+.tspec{font-size:13px;color:#7060a0;line-height:1.6}
+
+/* ── HORÁRIOS ── */
+.hours-bar{background:linear-gradient(90deg,var(–royal),var(–dp));padding:48px 56px;display:flex;align-items:center;justify-content:center;gap:56px;flex-wrap:wrap}
+.hitem{text-align:center}
+.hday{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(–muted);margin-bottom:7px}
+.htime{font-family:‘Cormorant Garamond’,serif;font-size:21px;color:var(–white)}
+.hdiv{width:1px;height:44px;background:rgba(212,168,75,.2)}
+
+/* ── DEPOIMENTOS ── */
+.reviews-bg{background:var(–white);padding:100px 56px}
+.reviews-inner{max-width:1340px;margin:0 auto}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.rcard{background:var(–pale);padding:32px 28px;border-left:3px solid var(–gold);transition:all .4s}
+.rcard:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(74,30,150,.08)}
+.rquote{font-family:‘Cormorant Garamond’,serif;font-size:17px;font-style:italic;color:var(–dp);line-height:1.65;margin-bottom:20px}
+.rauthor{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(–gold)}
+.rstars{color:var(–gold);font-size:14px;margin-bottom:12px}
+
+/* ── AGENDAMENTO ── */
+.booking-bg{background:var(–pale);padding:100px 56px}
+.booking-inner{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:1fr 1.3fr;gap:72px;align-items:start}
+.booking-blurb{font-size:15px;color:#7060a0;line-height:1.8;margin:18px 0 32px}
+.ilist{list-style:none}
+.ilist li{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;color:#7060a0;font-size:14px;line-height:1.5}
+.ico{width:36px;height:36px;border-radius:50%;background:var(–dp);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.bform{background:var(–dp);padding:48px 40px;box-shadow:0 40px 100px rgba(74,30,150,.18)}
+.fhead{font-family:‘Cormorant Garamond’,serif;font-size:27px;color:var(–white);margin-bottom:32px;padding-bottom:18px;border-bottom:1px solid rgba(212,168,75,.15)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(–muted);margin-bottom:7px}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(–white);font-family:‘Jost’,sans-serif;font-size:14px;padding:12px 15px;outline:none;transition:border-color .3s;appearance:none}
+.fg select option{background:var(–dp);color:var(–white)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(–gold)}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(160,148,192,.45)}
+.btn-sub{width:100%;background:linear-gradient(90deg,var(–gold),var(–glight));color:var(–dp);border:none;font-family:‘Jost’,sans-serif;font-weight:500;font-size:12px;letter-spacing:.22em;text-transform:uppercase;padding:17px;cursor:pointer;transition:all .3s;margin-top:10px}
+.btn-sub:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(212,168,75,.35)}
+
+/* ── FOOTER ── */
+footer{background:#100620;padding:56px 56px 36px}
+.ftop{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:56px;padding-bottom:44px;border-bottom:1px solid rgba(212,168,75,.1);margin-bottom:28px}
+.fbname{font-family:‘Cormorant Garamond’,serif;font-size:26px;color:var(–gold);margin-bottom:12px}
+.fbrand p{font-size:13px;color:var(–muted);line-height:1.8;max-width:240px}
+.fcol h4{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(–gold);margin-bottom:18px}
+.fcol ul{list-style:none}
+.fcol ul li{font-size:13px;color:var(–muted);margin-bottom:10px;display:flex;gap:8px}
+.fbot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(160,148,192,.4);flex-wrap:wrap;gap:10px}
+
+/* ── WHATSAPP ── */
+.wa{position:fixed;bottom:28px;right:28px;z-index:500;width:62px;height:62px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(37,211,102,.45);text-decoration:none;transition:transform .3s ease,box-shadow .3s;opacity:0;transform:scale(0);animation:waPop .5s ease forwards 2s}
+.wa:hover{transform:scale(1.12)!important;box-shadow:0 12px 40px rgba(37,211,102,.6)}
+.wa svg{width:32px;height:32px;fill:white}
+.wa-tip{position:absolute;right:74px;background:var(–dp);color:var(–white);font-size:13px;padding:8px 15px;white-space:nowrap;border:1px solid rgba(212,168,75,.2);opacity:0;pointer-events:none;transition:opacity .3s;font-family:‘Jost’,sans-serif}
+.wa:hover .wa-tip{opacity:1}
+
+/* ── PWA INSTALL BANNER ── */
+.pwa-banner{display:none;position:fixed;bottom:100px;right:28px;z-index:400;background:var(–dp);border:1px solid rgba(212,168,75,.3);padding:16px 20px;max-width:280px;animation:fadeUp .5s ease}
+.pwa-banner.show{display:block}
+.pwa-title{font-family:‘Cormorant Garamond’,serif;font-size:17px;color:var(–white);margin-bottom:6px}
+.pwa-sub{font-size:12px;color:var(–muted);line-height:1.5;margin-bottom:14px}
+.pwa-btns{display:flex;gap:10px}
+.pwa-install{background:var(–gold);color:var(–dp);border:none;padding:9px 18px;font-family:‘Jost’,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-weight:500}
+.pwa-dismiss{background:transparent;color:var(–muted);border:1px solid rgba(160,148,192,.3);padding:9px 14px;font-family:‘Jost’,sans-serif;font-size:11px;cursor:pointer}
+
+/* ── MODAL ── */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(10,0,26,.82);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal-ov.active{display:flex}
+.modal{background:var(–white);max-width:440px;width:90%;padding:48px 40px;text-align:center;animation:scaleIn .35s ease}
+.modal-icon{font-size:58px;margin-bottom:20px}
+.modal h3{font-family:‘Cormorant Garamond’,serif;font-size:28px;color:var(–dp);margin-bottom:12px}
+.modal p{font-size:15px;color:#7060a0;line-height:1.7;margin-bottom:28px}
+.modal-close{background:var(–dp);color:var(–white);border:none;padding:14px 32px;font-family:‘Jost’,sans-serif;font-size:12px;letter-spacing:.15em;cursor:pointer;text-transform:uppercase;transition:opacity .3s}
+.modal-close:hover{opacity:.8}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes waPop{to{opacity:1;transform:scale(1)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+.svc-grid{grid-template-columns:repeat(2,1fr)}
+.svc-grid-2{grid-template-columns:repeat(2,1fr)}
+.gal-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:unset}
+.gal-item:first-child{grid-column:unset;grid-row:unset}
+}
+@media(max-width:768px){
+nav{padding:16px 20px}
+.nav-links{display:none}
+.hero-content{padding:110px 24px 80px}
+.sw,.gal-section,.combos-bg,.team-bg,.booking-bg,.reviews-bg{padding:70px 24px}
+.booking-inner{grid-template-columns:1fr;gap:36px}
+.frow{grid-template-columns:1fr}
+.svc-grid,.svc-grid-2,.team-grid,.combos-grid,.reviews-grid{grid-template-columns:1fr}
+.gal-grid{grid-template-columns:1fr 1fr}
+.hours-bar{padding:36px 20px;gap:24px}
+.hdiv{display:none}
+.ftop{grid-template-columns:1fr;gap:32px}
+footer{padding:44px 20px 28px}
+.bform{padding:32px 22px}
+.hero-stats{display:none}
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav>
+  <a href="#" class="nav-logo">WX Salão</a>
+  <ul class="nav-links">
+    <li><a href="#galeria">Galeria</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#combos">Promoções</a></li>
+    <li><a href="#equipe">Equipe</a></li>
+    <li><a href="#agendar">Agendar</a></li>
+  </ul>
+  <a href="wx-admin.html" class="nav-admin">Painel ↗️</a>
+</nav>
+
+<!-- HERO -->
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="eyebrow">WX Salão de Beleza · Zona Leste · São Paulo</div>
+    <h1 class="hero-title">Sua beleza<br>merece <em>arte</em><br>e cuidado.</h1>
+    <p class="hero-sub">Cortes, coloração, hidratação, progressiva, penteados, manicure e muito mais. Agende em segundos e transforme seu visual.</p>
+    <div class="hero-cta">
+      <a href="#agendar" class="btn-gold">Agendar agora</a>
+      <a href="#galeria" class="btn-outline">Ver galeria</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">5+</div><div class="hstat-l">Anos</div></div>
+    <div class="hstat"><div class="hstat-n">3</div><div class="hstat-l">Profissionais</div></div>
+    <div class="hstat"><div class="hstat-n">9+</div><div class="hstat-l">Serviços</div></div>
+    <div class="hstat"><div class="hstat-n">★ 4.9</div><div class="hstat-l">Avaliação</div></div>
+  </div>
+</div>
+
+<!-- TICKER -->
+
+<div class="ticker-wrap">
+  <div style="display:flex">
+    <div class="ticker">
+      <span class="ti">✦ Combo Essencial — R$ 129</span>
+      <span class="ti">✦ Progressiva com brinde especial</span>
+      <span class="ti">✦ Penteado Noiva — agende com antecedência</span>
+      <span class="ti">✦ Manicure + Pedicure — R$ 75</span>
+      <span class="ti">✦ Seg a Sáb · 09h–19h · Zona Leste SP</span>
+      <span class="ti">✦ Combo Luxo completo — R$ 249</span>
+      <span class="ti">✦ Combo Essencial — R$ 129</span>
+      <span class="ti">✦ Progressiva com brinde especial</span>
+      <span class="ti">✦ Penteado Noiva — agende com antecedência</span>
+      <span class="ti">✦ Manicure + Pedicure — R$ 75</span>
+      <span class="ti">✦ Seg a Sáb · 09h–19h · Zona Leste SP</span>
+      <span class="ti">✦ Combo Luxo completo — R$ 249</span>
+    </div>
+  </div>
+</div>
+
+<!-- GALERIA -->
+
+<div class="gal-section" id="galeria">
+  <div class="gal-inner">
+    <div class="ey">Nosso trabalho</div>
+    <h2 class="st">Galeria de Fotos</h2>
+    <div class="gal-grid">
+      <div class="gal-item" data-label="Interior do Salão">
+        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80" alt="Salão de Beleza WX" loading="lazy">
+      </div>
+      <div class="gal-item" data-label="Corte Feminino">
+        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&q=80" alt="Corte Feminino" loading="lazy">
+      </div>
+      <div class="gal-item" data-label="Coloração">
+        <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&q=80" alt="Coloração" loading="lazy">
+      </div>
+      <div class="gal-item" data-label="Hidratação">
+        <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600&q=80" alt="Hidratação" loading="lazy">
+      </div>
+      <div class="gal-item" data-label="Escova & Finalização">
+        <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=600&q=80" alt="Escova" loading="lazy">
+      </div>
+      <div class="gal-item" data-label="Manicure">
+        <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=80" alt="Manicure" loading="lazy">
+      </div>
+    </div>
+    <p class="gal-note">📷 Para adicionar fotos reais do salão, envie pelo WhatsApp</p>
+  </div>
+</div>
+
+<!-- SERVIÇOS -->
+
+<div id="servicos">
+  <div class="sw">
+    <div class="ey">Tudo que você precisa</div>
+    <h2 class="st">Nossos Serviços</h2>
+    <p class="ss">Uma linha completa de cuidados capilares e de beleza. Saia renovada!</p>
+    <div class="svc-grid">
+      <div class="svc"><div class="si">✂️</div><div class="sn">Corte Feminino</div><div class="sd">Corte personalizado para seu rosto e estilo.</div><div class="sp">R$ 65</div></div>
+      <div class="svc"><div class="si">🎨</div><div class="sn">Coloração</div><div class="sd">Tintura, mechas e balayage com produtos premium.</div><div class="sp">a partir de R$ 120</div></div>
+      <div class="svc"><div class="si">💧</div><div class="sn">Hidratação</div><div class="sd">Tratamento intensivo para cabelos danificados.</div><div class="sp">R$ 80</div></div>
+      <div class="svc"><div class="si">🌬️</div><div class="sn">Escova</div><div class="sd">Modeladora ou lisa para acabamento impecável.</div><div class="sp">a partir de R$ 55</div></div>
+    </div>
+    <div class="svc-grid-2">
+      <div class="svc"><div class="si">✨</div><div class="sn">Progressiva & Selagem</div><div class="sd">Liso, brilhante e sem frizz por meses.</div><div class="sp">a partir de R$ 180</div></div>
+      <div class="svc"><div class="si">👰</div><div class="sn">Penteados & Noiva</div><div class="sd">Para festas, formaturas e casamentos.</div><div class="sp">a partir de R$ 150</div></div>
+      <div class="svc"><div class="si">💅</div><div class="sn">Manicure & Pedicure</div><div class="sd">Esmaltação simples, gel e decorações.</div><div class="sp">a partir de R$ 40</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMBOS -->
+
+<div class="combos-bg" id="combos">
+  <div class="combos-inner">
+    <div class="ey">Economize mais</div>
+    <h2 class="st">Combos & Promoções</h2>
+    <p class="ss">Serviços combinados com preço especial. Aproveite!</p>
+    <div class="combos-grid">
+      <div class="combo">
+        <div class="cbadge">Popular</div>
+        <div class="ctitle">Combo Essencial</div>
+        <ul class="citems"><li>✦ Corte Feminino</li><li>✦ Hidratação Express</li><li>✦ Escova Modeladora</li></ul>
+        <div class="cprice">R$ 129 <span class="cold">R$ 200</span></div>
+      </div>
+      <div class="combo feat">
+        <div class="cbadge">Mais completo</div>
+        <div class="ctitle">Combo Luxo</div>
+        <ul class="citems"><li>✦ Corte + Coloração</li><li>✦ Hidratação Profunda</li><li>✦ Escova Finalizadora</li><li>✦ Manicure simples</li></ul>
+        <div class="cprice">R$ 249 <span class="cold">R$ 340</span></div>
+      </div>
+      <div class="combo">
+        <div class="cbadge">Para eventos</div>
+        <div class="ctitle">Combo Festa</div>
+        <ul class="citems"><li>✦ Penteado elaborado</li><li>✦ Maquiagem social</li><li>✦ Manicure + Pedicure</li></ul>
+        <div class="cprice">R$ 199 <span class="cold">R$ 270</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EQUIPE -->
+
+<div class="team-bg" id="equipe">
+  <div class="team-inner">
+    <div class="ey">Quem cuida de você</div>
+    <h2 class="st">Nossa Equipe</h2>
+    <p class="ss">Profissionais apaixonadas pelo que fazem.</p>
+    <div class="team-grid">
+      <div class="tcard">
+        <img class="tphoto" src="https://images.unsplash.com/photo-1619335011787-4e56b84f1de5?w=500&q=80" alt="Walquíria">
+        <div class="tinfo">
+          <div class="tname">Walquíria</div>
+          <div class="trole">Proprietária & Especialista</div>
+          <div class="tspec">Especialista em coloração, cortes e gestão. Mais de 5 anos transformando visuais na Zona Leste.</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="tphoto" src="https://images.unsplash.com/photo-1595177813841-7fbf9df7a1e2?w=500&q=80" alt="Profissional 2">
+        <div class="tinfo">
+          <div class="tname">Profissional 2</div>
+          <div class="trole">Colorista & Progressiva</div>
+          <div class="tspec">Expert em coloração, balayage e tratamentos de alisamento.</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="tphoto" src="https://images.unsplash.com/photo-1514846326710-096e4a8035e0?w=500&q=80" alt="Profissional 3">
+        <div class="tinfo">
+          <div class="tname">Profissional 3</div>
+          <div class="trole">Estilista & Penteados</div>
+          <div class="tspec">Especializada em penteados para noivas, festas e ocasiões especiais.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HORÁRIOS -->
+
+<div class="hours-bar">
+  <div class="hitem"><div class="hday">Segunda a Sexta</div><div class="htime">09:00 – 19:00</div></div>
+  <div class="hdiv"></div>
+  <div class="hitem"><div class="hday">Sábado</div><div class="htime">09:00 – 17:00</div></div>
+  <div class="hdiv"></div>
+  <div class="hitem"><div class="hday">Domingo</div><div class="htime">Fechado</div></div>
+  <div class="hdiv"></div>
+  <div class="hitem"><div class="hday">Localização</div><div class="htime">Zona Leste, SP</div></div>
+</div>
+
+<!-- DEPOIMENTOS -->
+
+<div class="reviews-bg">
+  <div class="reviews-inner">
+    <div class="ey">O que dizem nossas clientes</div>
+    <h2 class="st">Avaliações</h2>
+    <div class="reviews-grid">
+      <div class="rcard">
+        <div class="rstars">★★★★★</div>
+        <div class="rquote">"Melhor salão da Zona Leste! A Walquíria é incrível, saí com o cabelo dos sonhos. Já marquei o próximo!"</div>
+        <div class="rauthor">— Ana Paula S.</div>
+      </div>
+      <div class="rcard">
+        <div class="rstars">★★★★★</div>
+        <div class="rquote">"Fiz o Combo Luxo e ficou perfeito. Atendimento acolhedor e resultado profissional. Super recomendo!"</div>
+        <div class="rauthor">— Fernanda M.</div>
+      </div>
+      <div class="rcard">
+        <div class="rstars">★★★★★</div>
+        <div class="rquote">"Penteado para meu casamento ficou lindo! Equipe muito dedicada e caprichosa. Obrigada WX Salão!"</div>
+        <div class="rauthor">— Juliana R.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENDAMENTO -->
+
+<div class="booking-bg" id="agendar">
+  <div class="booking-inner">
+    <div>
+      <div class="ey">Reserve seu momento</div>
+      <h2 class="st">Agendar<br><em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold)">horário</em></h2>
+      <p class="booking-blurb">Preencha o formulário e abrimos o WhatsApp automaticamente com sua mensagem já pronta. Simples e rápido!</p>
+      <ul class="ilist">
+        <li><span class="ico">📍</span><span>Zona Leste, São Paulo – SP</span></li>
+        <li><span class="ico">📱</span><span>WhatsApp: (11) 07812-7942</span></li>
+        <li><span class="ico">⏰</span><span>Seg–Sex 09h–19h · Sáb 09h–17h</span></li>
+        <li><span class="ico">🔔</span><span>Lembrete automático antes do seu horário</span></li>
+        <li><span class="ico">❌</span><span>Cancelamento fácil pelo WhatsApp</span></li>
+      </ul>
+    </div>
+    <div class="bform">
+      <div class="fhead">Preencha seus dados ✨</div>
+      <div class="frow">
+        <div class="fg"><label>Nome completo</label><input type="text" id="f-nome" placeholder="Seu nome"></div>
+        <div class="fg"><label>WhatsApp</label><input type="tel" id="f-tel" placeholder="(11) 9 0000-0000"></div>
+      </div>
+      <div class="fg">
+        <label>Serviço desejado</label>
+        <select id="f-servico">
+          <option value="">Selecione um serviço</option>
+          <optgroup label="── Cabelo ──">
+            <option>✂️ Corte Feminino — R$ 65</option>
+            <option>🎨 Coloração — a partir de R$ 120</option>
+            <option>💧 Hidratação — R$ 80</option>
+            <option>🌬️ Escova — a partir de R$ 55</option>
+            <option>✨ Progressiva / Selagem — a partir de R$ 180</option>
+            <option>👰 Penteado / Noiva — a partir de R$ 150</option>
+          </optgroup>
+          <optgroup label="── Unhas ──">
+            <option>💅 Manicure — a partir de R$ 40</option>
+            <option>💅 Pedicure — a partir de R$ 40</option>
+            <option>💅 Manicure + Pedicure — R$ 75</option>
+          </optgroup>
+          <optgroup label="── Combos ──">
+            <option>⭐ Combo Essencial — R$ 129</option>
+            <option>💜 Combo Luxo — R$ 249</option>
+            <option>🎉 Combo Festa — R$ 199</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Profissional</label>
+        <select id="f-prof">
+          <option value="">Sem preferência</option>
+          <option>Walquíria</option>
+          <option>Profissional 2</option>
+          <option>Profissional 3</option>
+        </select>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Data</label><input type="date" id="f-data"></div>
+        <div class="fg">
+          <label>Horário</label>
+          <select id="f-hora">
+            <option value="">Selecione</option>
+            <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option>
+            <option>11:00</option><option>11:30</option><option>12:00</option>
+            <option>13:00</option><option>13:30</option><option>14:00</option><option>14:30</option>
+            <option>15:00</option><option>15:30</option><option>16:00</option><option>16:30</option>
+            <option>17:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Observações (opcional)</label><textarea id="f-obs" rows="2" placeholder="Ex: cabelo longo, alergia a amônia..."></textarea></div>
+      <button class="btn-sub" onclick="confirmarAgendamento()">Confirmar agendamento ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="ftop">
+    <div class="fbrand">
+      <div class="fbname">WX Salão de Beleza</div>
+      <p>Arte e cuidado para realçar sua beleza. Atendemos na Zona Leste de São Paulo.</p>
+    </div>
+    <div class="fcol">
+      <h4>Serviços</h4>
+      <ul>
+        <li>✦ Corte & Coloração</li>
+        <li>✦ Hidratação & Escova</li>
+        <li>✦ Progressiva & Selagem</li>
+        <li>✦ Penteados & Noiva</li>
+        <li>✦ Manicure & Pedicure</li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h4>Contato</h4>
+      <ul>
+        <li>📍 Zona Leste, São Paulo – SP</li>
+        <li>📱 (11) 07812-7942</li>
+        <li>⏰ Seg–Sex · 09h–19h</li>
+        <li>⏰ Sábado · 09h–17h</li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbot">
+    <span>© 2025 WX Salão de Beleza — Todos os direitos reservados</span>
+    <span>Feito com 💜 para a Walquíria e equipe</span>
+  </div>
+</footer>
+
+<!-- WHATSAPP -->
+
+<a class="wa" href="https://wa.me/5511078127942" target="_blank" rel="noopener">
+  <span class="wa-tip">Falar no WhatsApp 💬</span>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- PWA INSTALL BANNER -->
+
+<div class="pwa-banner" id="pwa-banner">
+  <div class="pwa-title">📱 Instalar no celular</div>
+  <div class="pwa-sub">Adicione o WX Salão à sua tela inicial para agendar ainda mais fácil!</div>
+  <div class="pwa-btns">
+    <button class="pwa-install" id="pwa-install-btn">Instalar</button>
+    <button class="pwa-dismiss" id="pwa-dismiss-btn">Agora não</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+
+<div class="modal-ov" id="modal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <h3>Agendamento enviado!</h3>
+    <p>Abrimos o WhatsApp com sua mensagem pronta. A Walquíria vai confirmar seu horário em breve! 💜✨</p>
+    <button class="modal-close" onclick="fecharModal()">Perfeito, obrigada!</button>
+  </div>
+</div>
+
+<script>
+// Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+// PWA Install prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(() => document.getElementById('pwa-banner').classList.add('show'), 3000);
+});
+
+document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  }
+  document.getElementById('pwa-banner').classList.remove('show');
+});
+
+document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
+  document.getElementById('pwa-banner').classList.remove('show');
+});
+
+// Data mínima
+const di = document.getElementById('f-data');
+if (di) {
+  di.min = new Date().toISOString().split('T')[0];
+  di.addEventListener('change', function() {
+    if (new Date(this.value + 'T12:00:00').getDay() === 0) {
+      alert('Fechamos aos domingos. Escolha outro dia 😊');
+      this.value = '';
+    }
+  });
+}
+
+function confirmarAgendamento() {
+  const nome    = document.getElementById('f-nome').value.trim();
+  const tel     = document.getElementById('f-tel').value.trim();
+  const servico = document.getElementById('f-servico').value;
+  const data    = document.getElementById('f-data').value;
+  const hora    = document.getElementById('f-hora').value;
+
+  if (!nome || !servico || !data || !hora) {
+    alert('Por favor preencha: nome, serviço, data e horário.');
+    return;
+  }
+
+  // Salvar no localStorage para o painel admin ver
+  const agendamentos = JSON.parse(localStorage.getItem('wx_agendamentos') || '[]');
+  const novo = {
+    id: Date.now(),
+    nome, tel,
+    servico,
+    prof: document.getElementById('f-prof').value || 'Sem preferência',
+    data, hora,
+    obs: document.getElementById('f-obs').value.trim(),
+    status: 'pendente',
+    criadoEm: new Date().toISOString()
+  };
+  agendamentos.push(novo);
+  localStorage.setItem('wx_agendamentos', JSON.stringify(agendamentos));
+
+  const dataFmt = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+  const msg = encodeURIComponent(
+    Olá Walquíria! Gostaria de agendar:\n\n +
+    👤 *Nome:* ${nome}\n +
+    📱 *Tel:* ${tel || 'não informado'}\n +
+    💇 *Serviço:* ${servico}\n +
+    👩 *Profissional:* ${novo.prof}\n +
+    📅 *Data:* ${dataFmt}\n +
+    ⏰ *Horário:* ${hora}\n +
+    (novo.obs ? 📝 *Obs:* ${novo.obs} : '') +
+    \n\nAguardo confirmação! 😊
+  );
+
+  window.open(https://wa.me/5511078127942?text=${msg}, '_blank');
+  document.getElementById('modal').classList.add('active');
+}
+
+function fecharModal() {
+  document.getElementById('modal').classList.remove('active');
+  ['f-nome','f-tel','f-obs'].forEach(id => document.getElementById(id).value = '');
+  ['f-servico','f-prof','f-hora'].forEach(id => document.getElementById(id).selectedIndex = 0);
+  document.getElementById('f-data').value = '';
+}
+
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) fecharModal();
+});
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+
+</body>
+</html>
